@@ -8,5 +8,21 @@
         <h1>Belly Button Biodiversity Dashboard</h1>
         <p>Everything you never wanted to know</p>
     </div>
+    <div class="row">
+        <div class="col-md-4">
+            <form method="POST" action="" role="form" name="sampleSelector">
+                <div class="form-group">
+                    <label for="selDataset">SELECT Sample:</label>
+                    <select id="selDataset">
+                        {% for name in names %}
+                            <option value="{{ name }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
 {% endblock %}

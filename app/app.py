@@ -241,9 +241,20 @@ class SamplesMetadata(db.Model):
         return '<SamplesMetadata %r>' % self.name
 
 
+def get_names():
+    """List of sample names.
+    :returns List of sample names in format BB_XXX
+    """
+    results = db.session.query(SamplesMetadata.SAMPLEID).all()
+    name_list = [('BB_' + str(name)) for (name,) in results]
+
+    return name_list
+
+
 @app.route('/')
 def index():
-    return render_template("index.html")
+    name_list = get_names()
+    return render_template("index.html",names=name_list)
 
 
 @app.route('/names')
@@ -251,13 +262,10 @@ def names():
     """List of sample names.
     :returns List of sample names in format BB_XXX
     """
-    results = db.session.query(SamplesMetadata.SAMPLEID).all()
-    name_list = []
-    names = [name for (name,) in results]
-    for name in names:
-        name_list.append(f'"BB_{name}"')
+    name_list = get_names()
 
     return render_template("names.html", names=name_list)
+
 
 @app.route('/otu')
 def otu_page():
@@ -275,10 +283,7 @@ def otu_page():
     ]
     """
     results = db.session.query(Otu.LOWEST_TAXONOMIC_UNIT_FOUND).all()
-    name_list = []
-    names = [name for (name,) in results]
-    for name in names:
-        name_list.append(f'"{name}"')
+    name_list = [name for (name,) in results]
 
     return render_template("otu.html", names=name_list)
 
@@ -398,7 +403,6 @@ def get_sample_values(sample):
     }
 
     return jsonify(sample_data)
-
 
 
 if __name__ == '__main__':
