@@ -7,8 +7,8 @@ from flask import (
     redirect,
 )
 from flask_sqlalchemy import SQLAlchemy
-from flask_bootstrap import Bootstrap
 from sqlalchemy import desc
+from flask_bootstrap import Bootstrap
 
 
 app = Flask(__name__)
@@ -241,20 +241,9 @@ class SamplesMetadata(db.Model):
         return '<SamplesMetadata %r>' % self.name
 
 
-def get_names():
-    """List of sample names.
-    :returns List of sample names in format BB_XXX
-    """
-    results = db.session.query(SamplesMetadata.SAMPLEID).all()
-    name_list = [('BB_' + str(name)) for (name,) in results]
-
-    return name_list
-
-
 @app.route('/')
 def index():
-    name_list = get_names()
-    return render_template("index.html",names=name_list)
+    return render_template("index.html")
 
 
 @app.route('/names')
@@ -262,9 +251,9 @@ def names():
     """List of sample names.
     :returns List of sample names in format BB_XXX
     """
-    name_list = get_names()
-
-    return render_template("names.html", names=name_list)
+    results = db.session.query(SamplesMetadata.SAMPLEID).all()
+    name_list = [('BB_' + str(name)) for (name,) in results]
+    return jsonify(name_list)
 
 
 @app.route('/otu')
@@ -285,7 +274,7 @@ def otu_page():
     results = db.session.query(Otu.LOWEST_TAXONOMIC_UNIT_FOUND).all()
     name_list = [name for (name,) in results]
 
-    return render_template("otu.html", names=name_list)
+    return jsonify(name_list)
 
 
 @app.route('/metadata/<sample>')
