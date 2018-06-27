@@ -26,12 +26,16 @@ function buildPieChart(sample) {
     console.log(pieUrl);
     Plotly.d3.json(pieUrl, function (error, response) {
         console.log(response);
-        let sample_list = response.otu_id;
-        console.log(sample_list);
+        console.log(response["otu_ids"]);
+        console.log(response["sample_values"])
+        let bob = response["otu_ids"].slice(0,10);
+        let mary = response["sample_values"].slice(0,10);
+        console.log("Bob" + bob);
+        console.log("Mary " + mary);
+
     const pieTrace = {
-        labels: ["beer", "wine", "martini", "margarita",
-        "ice tea", "rum & coke", "mai tai", "gin & tonic"],
-        values: [22.7, 17.1, 9.9, 8.7, 7.2, 6.1, 6.0, 4.6],
+        labels: bob.map(row => row["otu_ids"]),
+        values: mary.map(row => row["sample_values"]),
         type: 'pie'
     };
 
